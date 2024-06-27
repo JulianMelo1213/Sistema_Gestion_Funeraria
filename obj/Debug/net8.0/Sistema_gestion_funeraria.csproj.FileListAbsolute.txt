@@ -264,3 +264,4 @@ C:\Users\gusta\source\repos\Sistema_gestion_funeraria\obj\Debug\net8.0\refint\Si
 C:\Users\gusta\source\repos\Sistema_gestion_funeraria\obj\Debug\net8.0\Sistema_gestion_funeraria.pdb
 C:\Users\gusta\source\repos\Sistema_gestion_funeraria\obj\Debug\net8.0\Sistema_gestion_funeraria.genruntimeconfig.cache
 C:\Users\gusta\source\repos\Sistema_gestion_funeraria\obj\Debug\net8.0\ref\Sistema_gestion_funeraria.dll
+C:\Users\gusta\source\repos\Sistema_gestion_funeraria\obj\Debug\net8.0\Sistema_gestion_funeraria.sourcelink.json
