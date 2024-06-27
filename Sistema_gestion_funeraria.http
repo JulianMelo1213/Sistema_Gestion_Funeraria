@@ -1,0 +1,6 @@
+@Sistema_gestion_funeraria_HostAddress = http://localhost:5247
+
+GET {{Sistema_gestion_funeraria_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sistema_gestion_funeraria", "Sistema_gestion_funeraria.csproj", "{DEEA87A1-1A73-43CF-882F-0296F0E153EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DEEA87A1-1A73-43CF-882F-0296F0E153EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEEA87A1-1A73-43CF-882F-0296F0E153EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEEA87A1-1A73-43CF-882F-0296F0E153EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEEA87A1-1A73-43CF-882F-0296F0E153EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8D7958E0-0F34-4819-AF5E-D6EA95362FE6}
+	EndGlobalSection
+EndGlobal
