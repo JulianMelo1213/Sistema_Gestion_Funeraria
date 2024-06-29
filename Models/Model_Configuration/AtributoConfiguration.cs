@@ -18,7 +18,7 @@ namespace Sistema_gestion_funeraria.Models.Model_Configuration
                 entity.HasMany(d => d.IdCategoria).WithMany(p => p.IdAtributos)
                     .UsingEntity<Dictionary<string, object>>(
                         "AtributosCategoria",
-                        r => r.HasOne<TipoIdentificacione>().WithMany()
+                        r => r.HasOne<Categoria>().WithMany()
                             .HasForeignKey("IdCategoria")
                             .OnDelete(DeleteBehavior.ClientSetNull)
                             .HasConstraintName("FK__Atributo___ID_Ca__2F10007B"),

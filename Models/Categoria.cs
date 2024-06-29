@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Test.Models;
 
-public partial class TipoIdentificacione
+public partial class Categoria
 {
     public int IdCategoria { get; set; }
 

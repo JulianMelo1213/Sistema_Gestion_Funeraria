@@ -11,7 +11,7 @@ public partial class ServiciosCategoria
 
     public decimal Costo { get; set; }
 
-    public virtual TipoIdentificacione IdCategoriaNavigation { get; set; } = null!;
+    public virtual Categoria IdCategoriaNavigation { get; set; } = null!;
 
     public virtual Servicio IdServicioNavigation { get; set; } = null!;
 }

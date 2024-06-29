@@ -11,5 +11,5 @@ public partial class Atributo
 
     public string Descripcion { get; set; } = null!;
 
-    public virtual ICollection<TipoIdentificacione> IdCategoria { get; set; } = new List<TipoIdentificacione>();
+    public virtual ICollection<Categoria> IdCategoria { get; set; } = new List<Categoria>();
 }
