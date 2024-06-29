@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Sistema_gestion_funeraria")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d0b60aa047a35e21bf513e2e24973ff77e301863")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a64ea88b6bdca0340528ba8f7148caa35d7f6bdc")]
 [assembly: System.Reflection.AssemblyProductAttribute("Sistema_gestion_funeraria")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Sistema_gestion_funeraria")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
