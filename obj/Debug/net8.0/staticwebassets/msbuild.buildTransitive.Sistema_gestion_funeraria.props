@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\Sistema_gestion_funeraria.props" />
-</Project>
