@@ -25,7 +25,7 @@ public partial class Empleado
 
     public virtual Cargo IdCargoNavigation { get; set; } = null!;
 
-    public virtual JornadaLaborale IdJornadaLaboralNavigation { get; set; } = null!;
+    public virtual TipoIdentificacione IdJornadaLaboralNavigation { get; set; } = null!;
 
     public virtual Localidad IdLocalidadNavigation { get; set; } = null!;
 
