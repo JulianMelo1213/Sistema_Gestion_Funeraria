@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Sistema_gestion_funeraria.Models;
 using Sistema_gestion_funeraria.Models.Model_Configuration;
-namespace Test.Models;
+
+namespace Sistema_gestion_funeraria.Models;
 
 public partial class FunerariaContext : IdentityDbContext<AppUser>
 {
     public FunerariaContext()
     {
     }
-
-    
 
     public FunerariaContext(DbContextOptions<FunerariaContext> options)
         : base(options)
