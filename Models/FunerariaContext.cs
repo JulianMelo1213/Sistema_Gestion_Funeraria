@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+using Sistema_gestion_funeraria.Models;
+using Sistema_gestion_funeraria.Models.Model_Configuration;
 namespace Test.Models;
 
-public partial class FunerariaContext : DbContext
+public partial class FunerariaContext : IdentityDbContext<AppUser>
 {
     public FunerariaContext()
     {
     }
+
+    
 
     public FunerariaContext(DbContextOptions<FunerariaContext> options)
         : base(options)
@@ -46,33 +50,8 @@ public partial class FunerariaContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Atributo>(entity =>
-        {
-            entity.HasKey(e => e.IdAtributo).HasName("PK__Atributo__5ECA4A186BBE52E3");
+        modelBuilder.ApplyConfiguration(new AtributoConfiguration());
 
-            entity.Property(e => e.IdAtributo).HasColumnName("ID_Atributo");
-            entity.Property(e => e.Descripcion).HasMaxLength(200);
-            entity.Property(e => e.Nombre).HasMaxLength(100);
-
-            entity.HasMany(d => d.IdCategoria).WithMany(p => p.IdAtributos)
-                .UsingEntity<Dictionary<string, object>>(
-                    "AtributosCategoria",
-                    r => r.HasOne<Categoria>().WithMany()
-                        .HasForeignKey("IdCategoria")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Atributo___ID_Ca__2F10007B"),
-                    l => l.HasOne<Atributo>().WithMany()
-                        .HasForeignKey("IdAtributo")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__Atributo___ID_At__2E1BDC42"),
-                    j =>
-                    {
-                        j.HasKey("IdAtributo", "IdCategoria").HasName("PK__Atributo__1EE0EA6043280821");
-                        j.ToTable("Atributos_Categorias");
-                        j.IndexerProperty<int>("IdAtributo").HasColumnName("ID_Atributo");
-                        j.IndexerProperty<int>("IdCategoria").HasColumnName("ID_Categoria");
-                    });
-        });
 
         modelBuilder.Entity<Cargo>(entity =>
         {
