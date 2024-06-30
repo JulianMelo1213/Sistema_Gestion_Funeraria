@@ -46,9 +46,13 @@ namespace Sistema_gestion_funeraria.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfiguration(new AtributoConfiguration());
 
             modelBuilder.ApplyConfiguration(new CargoConfiguration());
+
+            modelBuilder.ApplyConfiguration(new TipoIdentificacionConfiguration());
 
             modelBuilder.ApplyConfiguration(new CategoriaConfiguration());
 

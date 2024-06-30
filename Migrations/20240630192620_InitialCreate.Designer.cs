@@ -12,7 +12,7 @@ using Sistema_gestion_funeraria.Models;
 namespace Sistema_gestion_funeraria.Migrations
 {
     [DbContext(typeof(FunerariaContext))]
-    [Migration("20240629175230_InitialCreate")]
+    [Migration("20240630192620_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -241,7 +241,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Test.Models.Atributo", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Atributo", b =>
                 {
                     b.Property<int>("IdAtributo")
                         .ValueGeneratedOnAdd()
@@ -266,7 +266,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Atributos");
                 });
 
-            modelBuilder.Entity("Test.Models.Cargo", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Cargo", b =>
                 {
                     b.Property<int>("IdCargo")
                         .ValueGeneratedOnAdd()
@@ -291,7 +291,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Cargos");
                 });
 
-            modelBuilder.Entity("Test.Models.Categoria", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Categoria", b =>
                 {
                     b.Property<int>("IdCategoria")
                         .ValueGeneratedOnAdd()
@@ -319,7 +319,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Categorias");
                 });
 
-            modelBuilder.Entity("Test.Models.Difunto", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Difunto", b =>
                 {
                     b.Property<int>("IdDifunto")
                         .ValueGeneratedOnAdd()
@@ -380,7 +380,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Difuntos");
                 });
 
-            modelBuilder.Entity("Test.Models.Empleado", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Empleado", b =>
                 {
                     b.Property<int>("IdEmpleado")
                         .ValueGeneratedOnAdd()
@@ -438,7 +438,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Empleados");
                 });
 
-            modelBuilder.Entity("Test.Models.FacturasServicio", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.FacturasServicio", b =>
                 {
                     b.Property<int>("IdServicio")
                         .HasColumnType("int")
@@ -457,7 +457,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Facturas_Servicios", (string)null);
                 });
 
-            modelBuilder.Entity("Test.Models.JornadaLaborale", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.JornadaLaborale", b =>
                 {
                     b.Property<int>("IdJornadaLaboral")
                         .ValueGeneratedOnAdd()
@@ -480,7 +480,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Jornada_Laborales", (string)null);
                 });
 
-            modelBuilder.Entity("Test.Models.LibroFirma", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.LibroFirma", b =>
                 {
                     b.Property<int>("IdLibroFirma")
                         .ValueGeneratedOnAdd()
@@ -511,7 +511,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Libro_Firmas", (string)null);
                 });
 
-            modelBuilder.Entity("Test.Models.Localidad", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Localidad", b =>
                 {
                     b.Property<int>("IdLocalidad")
                         .ValueGeneratedOnAdd()
@@ -541,7 +541,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Localidad", (string)null);
                 });
 
-            modelBuilder.Entity("Test.Models.Sala", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Sala", b =>
                 {
                     b.Property<int>("IdSala")
                         .ValueGeneratedOnAdd()
@@ -583,7 +583,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Salas");
                 });
 
-            modelBuilder.Entity("Test.Models.Servicio", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Servicio", b =>
                 {
                     b.Property<int>("IdServicio")
                         .ValueGeneratedOnAdd()
@@ -611,7 +611,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Servicios");
                 });
 
-            modelBuilder.Entity("Test.Models.ServiciosCategoria", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.ServiciosCategoria", b =>
                 {
                     b.Property<int>("IdServicio")
                         .HasColumnType("int")
@@ -632,7 +632,7 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.ToTable("Servicios_Categorias", (string)null);
                 });
 
-            modelBuilder.Entity("Test.Models.TipoIdentificacione", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.TipoIdentificacione", b =>
                 {
                     b.Property<int>("IdTipoIdentificacion")
                         .ValueGeneratedOnAdd()
@@ -654,13 +654,13 @@ namespace Sistema_gestion_funeraria.Migrations
 
             modelBuilder.Entity("AtributosCategoria", b =>
                 {
-                    b.HasOne("Test.Models.Atributo", null)
+                    b.HasOne("Sistema_gestion_funeraria.Models.Atributo", null)
                         .WithMany()
                         .HasForeignKey("IdAtributo")
                         .IsRequired()
                         .HasConstraintName("FK__Atributo___ID_At__2E1BDC42");
 
-                    b.HasOne("Test.Models.Categoria", null)
+                    b.HasOne("Sistema_gestion_funeraria.Models.Categoria", null)
                         .WithMany()
                         .HasForeignKey("IdCategoria")
                         .IsRequired()
@@ -718,15 +718,15 @@ namespace Sistema_gestion_funeraria.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Test.Models.Difunto", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Difunto", b =>
                 {
-                    b.HasOne("Test.Models.TipoIdentificacione", "IdDifuntoNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.TipoIdentificacione", "IdDifuntoNavigation")
                         .WithOne("Difunto")
-                        .HasForeignKey("Test.Models.Difunto", "IdDifunto")
+                        .HasForeignKey("Sistema_gestion_funeraria.Models.Difunto", "IdDifunto")
                         .IsRequired()
                         .HasConstraintName("FK_Difuntos_Tipo_Identificaciones");
 
-                    b.HasOne("Test.Models.Sala", "IdSalaNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.Sala", "IdSalaNavigation")
                         .WithMany("Difuntos")
                         .HasForeignKey("IdSala")
                         .IsRequired()
@@ -737,27 +737,27 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.Navigation("IdSalaNavigation");
                 });
 
-            modelBuilder.Entity("Test.Models.Empleado", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Empleado", b =>
                 {
-                    b.HasOne("Test.Models.Cargo", "IdCargoNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.Cargo", "IdCargoNavigation")
                         .WithMany("Empleados")
                         .HasForeignKey("IdCargo")
                         .IsRequired()
                         .HasConstraintName("FK_Empleados_Cargos");
 
-                    b.HasOne("Test.Models.JornadaLaborale", "IdJornadaLaboralNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.JornadaLaborale", "IdJornadaLaboralNavigation")
                         .WithMany("Empleados")
                         .HasForeignKey("IdJornadaLaboral")
                         .IsRequired()
                         .HasConstraintName("FK_Empleados_Jornada_Laborales");
 
-                    b.HasOne("Test.Models.Localidad", "IdLocalidadNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.Localidad", "IdLocalidadNavigation")
                         .WithMany("Empleados")
                         .HasForeignKey("IdLocalidad")
                         .IsRequired()
                         .HasConstraintName("FK_Empleados_Localidad");
 
-                    b.HasOne("Test.Models.TipoIdentificacione", "IdTipoIdentificacionNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.TipoIdentificacione", "IdTipoIdentificacionNavigation")
                         .WithMany("Empleados")
                         .HasForeignKey("IdTipoIdentificacion")
                         .IsRequired()
@@ -772,9 +772,9 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.Navigation("IdTipoIdentificacionNavigation");
                 });
 
-            modelBuilder.Entity("Test.Models.FacturasServicio", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.FacturasServicio", b =>
                 {
-                    b.HasOne("Test.Models.Servicio", "IdServicioNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.Servicio", "IdServicioNavigation")
                         .WithMany("FacturasServicios")
                         .HasForeignKey("IdServicio")
                         .IsRequired()
@@ -783,9 +783,9 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.Navigation("IdServicioNavigation");
                 });
 
-            modelBuilder.Entity("Test.Models.LibroFirma", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.LibroFirma", b =>
                 {
-                    b.HasOne("Test.Models.Difunto", "IdDifuntoNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.Difunto", "IdDifuntoNavigation")
                         .WithMany("LibroFirmas")
                         .HasForeignKey("IdDifunto")
                         .IsRequired()
@@ -794,15 +794,15 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.Navigation("IdDifuntoNavigation");
                 });
 
-            modelBuilder.Entity("Test.Models.Sala", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Sala", b =>
                 {
-                    b.HasOne("Test.Models.Categoria", "IdCategoriaNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.Categoria", "IdCategoriaNavigation")
                         .WithMany("Salas")
                         .HasForeignKey("IdCategoria")
                         .IsRequired()
                         .HasConstraintName("FK__Salas__ID_Catego__29572725");
 
-                    b.HasOne("Test.Models.Localidad", "IdLocalidadNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.Localidad", "IdLocalidadNavigation")
                         .WithMany("Salas")
                         .HasForeignKey("IdLocalidad")
                         .IsRequired()
@@ -813,15 +813,15 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.Navigation("IdLocalidadNavigation");
                 });
 
-            modelBuilder.Entity("Test.Models.ServiciosCategoria", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.ServiciosCategoria", b =>
                 {
-                    b.HasOne("Test.Models.Categoria", "IdCategoriaNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.Categoria", "IdCategoriaNavigation")
                         .WithMany("ServiciosCategoria")
                         .HasForeignKey("IdCategoria")
                         .IsRequired()
                         .HasConstraintName("FK__Servicios__ID_Ca__34C8D9D1");
 
-                    b.HasOne("Test.Models.Servicio", "IdServicioNavigation")
+                    b.HasOne("Sistema_gestion_funeraria.Models.Servicio", "IdServicioNavigation")
                         .WithMany("ServiciosCategoria")
                         .HasForeignKey("IdServicio")
                         .IsRequired()
@@ -832,48 +832,48 @@ namespace Sistema_gestion_funeraria.Migrations
                     b.Navigation("IdServicioNavigation");
                 });
 
-            modelBuilder.Entity("Test.Models.Cargo", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Cargo", b =>
                 {
                     b.Navigation("Empleados");
                 });
 
-            modelBuilder.Entity("Test.Models.Categoria", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Categoria", b =>
                 {
                     b.Navigation("Salas");
 
                     b.Navigation("ServiciosCategoria");
                 });
 
-            modelBuilder.Entity("Test.Models.Difunto", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Difunto", b =>
                 {
                     b.Navigation("LibroFirmas");
                 });
 
-            modelBuilder.Entity("Test.Models.JornadaLaborale", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.JornadaLaborale", b =>
                 {
                     b.Navigation("Empleados");
                 });
 
-            modelBuilder.Entity("Test.Models.Localidad", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Localidad", b =>
                 {
                     b.Navigation("Empleados");
 
                     b.Navigation("Salas");
                 });
 
-            modelBuilder.Entity("Test.Models.Sala", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Sala", b =>
                 {
                     b.Navigation("Difuntos");
                 });
 
-            modelBuilder.Entity("Test.Models.Servicio", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.Servicio", b =>
                 {
                     b.Navigation("FacturasServicios");
 
                     b.Navigation("ServiciosCategoria");
                 });
 
-            modelBuilder.Entity("Test.Models.TipoIdentificacione", b =>
+            modelBuilder.Entity("Sistema_gestion_funeraria.Models.TipoIdentificacione", b =>
                 {
                     b.Navigation("Difunto");
 
