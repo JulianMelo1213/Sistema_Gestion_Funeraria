@@ -5,9 +5,9 @@ using Sistema_gestion_funeraria.Models;
 
 namespace Sistema_gestion_funeraria.Models.Model_Configuration
 {
-    public class JornadaLaboralConfiguration : IEntityTypeConfiguration<TipoIdentificacione>
+    public class JornadaLaboralConfiguration : IEntityTypeConfiguration<JornadaLaborale>
     {
-        public void Configure(EntityTypeBuilder<TipoIdentificacione> entity)
+        public void Configure(EntityTypeBuilder<JornadaLaborale> entity)
         {
            
            entity.HasKey(e => e.IdJornadaLaboral).HasName("PK__Jornada___4D9539810E0370F1");
