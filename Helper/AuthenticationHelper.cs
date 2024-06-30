@@ -29,7 +29,7 @@ namespace Sistema_gestion_funeraria.Helper
             var jwtToken = new JwtSecurityToken(
                 claims: claims,
                 notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddDays(14),
+                expires: DateTime.UtcNow.AddMinutes(20),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
                 );
 
