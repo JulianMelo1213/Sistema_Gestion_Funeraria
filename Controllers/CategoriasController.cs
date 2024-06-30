@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Test.Models;
+using Sistema_gestion_funeraria.Models;
 
 namespace Sistema_gestion_funeraria.Controllers
 {
@@ -22,14 +22,14 @@ namespace Sistema_gestion_funeraria.Controllers
 
         // GET: api/Categorias
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TipoIdentificacione>>> GetCategorias()
+        public async Task<ActionResult<IEnumerable<Categoria>>> GetCategorias()
         {
             return await _context.Categorias.ToListAsync();
         }
 
         // GET: api/Categorias/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TipoIdentificacione>> GetCategoria(int id)
+        public async Task<ActionResult<Categoria>> GetCategoria(int id)
         {
             var categoria = await _context.Categorias.FindAsync(id);
 
@@ -44,7 +44,7 @@ namespace Sistema_gestion_funeraria.Controllers
         // PUT: api/Categorias/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategoria(int id, TipoIdentificacione categoria)
+        public async Task<IActionResult> PutCategoria(int id, Categoria categoria)
         {
             if (id != categoria.IdCategoria)
             {
@@ -75,7 +75,7 @@ namespace Sistema_gestion_funeraria.Controllers
         // POST: api/Categorias
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TipoIdentificacione>> PostCategoria(TipoIdentificacione categoria)
+        public async Task<ActionResult<Categoria>> PostCategoria(Categoria categoria)
         {
             _context.Categorias.Add(categoria);
             await _context.SaveChangesAsync();

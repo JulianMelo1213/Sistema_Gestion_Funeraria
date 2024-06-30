@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Test.Models;
+using Sistema_gestion_funeraria.Models;
 
 namespace Sistema_gestion_funeraria.Controllers
 {
@@ -22,14 +22,14 @@ namespace Sistema_gestion_funeraria.Controllers
 
         // GET: api/JornadaLaborales
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TipoIdentificacione>>> GetJornadaLaborales()
+        public async Task<ActionResult<IEnumerable<JornadaLaborale>>> GetJornadaLaborales()
         {
             return await _context.JornadaLaborales.ToListAsync();
         }
 
         // GET: api/JornadaLaborales/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TipoIdentificacione>> GetJornadaLaborale(int id)
+        public async Task<ActionResult<JornadaLaborale>> GetJornadaLaborale(int id)
         {
             var jornadaLaborale = await _context.JornadaLaborales.FindAsync(id);
 
@@ -44,7 +44,7 @@ namespace Sistema_gestion_funeraria.Controllers
         // PUT: api/JornadaLaborales/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutJornadaLaborale(int id, TipoIdentificacione jornadaLaborale)
+        public async Task<IActionResult> PutJornadaLaborale(int id, JornadaLaborale jornadaLaborale)
         {
             if (id != jornadaLaborale.IdJornadaLaboral)
             {
@@ -75,7 +75,7 @@ namespace Sistema_gestion_funeraria.Controllers
         // POST: api/JornadaLaborales
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TipoIdentificacione>> PostJornadaLaborale(TipoIdentificacione jornadaLaborale)
+        public async Task<ActionResult<JornadaLaborale>> PostJornadaLaborale(JornadaLaborale jornadaLaborale)
         {
             _context.JornadaLaborales.Add(jornadaLaborale);
             await _context.SaveChangesAsync();

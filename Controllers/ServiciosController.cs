@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Test.Models;
+using Sistema_gestion_funeraria.Models;
+
 
 namespace Sistema_gestion_funeraria.Controllers
 {

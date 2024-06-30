@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Reflection.Emit;
-using Test.Models;
 
 namespace Sistema_gestion_funeraria.Models.Model_Configuration
 {
