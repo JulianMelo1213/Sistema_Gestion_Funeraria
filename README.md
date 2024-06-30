@@ -5,7 +5,7 @@ El **Sistema de Gestión de Funeraria** es una aplicación web desarrollada con 
 ## Participantes 👩‍🎓👨‍🎓
 
 <a href="https://github.com/JulianMelo1213/Sistema_Gestion_Funeraria/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=JulianMelo1213/Sistema_Gestion_Funeraria/" />
+  <img src="https://contrib.rocks/image?repo=JulianMelo1213/Sistema_Gestion_Funeraria" />
 </a>
 
 ## Configuración del Entorno
