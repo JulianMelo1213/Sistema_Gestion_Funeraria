@@ -5,6 +5,7 @@ using Sistema_gestion_funeraria.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,7 +49,7 @@ builder.Services.AddSwaggerGen(option =>
         In = ParameterLocation.Header,
         Description = "Favor añadir un token válido",
         Name = "Authorization",
-        Type = SecuritySchemeType.Https,
+        Type = SecuritySchemeType.Http,
         BearerFormat = "JWT",
         Scheme = "Bearer"
     });
