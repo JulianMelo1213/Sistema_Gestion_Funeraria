@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Test.Models;
+﻿namespace Sistema_gestion_funeraria.Models;
 
 public partial class Sala
 {
@@ -19,7 +16,7 @@ public partial class Sala
 
     public virtual ICollection<Difunto> Difuntos { get; set; } = new List<Difunto>();
 
-    public virtual Categoria IdCategoriaNavigation { get; set; } = null!;
+    public virtual TipoIdentificacione IdCategoriaNavigation { get; set; } = null!;
 
     public virtual Localidad IdLocalidadNavigation { get; set; } = null!;
 }

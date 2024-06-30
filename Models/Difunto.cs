@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Test.Models;
+namespace Sistema_gestion_funeraria.Models;
 
 public partial class Difunto
 {

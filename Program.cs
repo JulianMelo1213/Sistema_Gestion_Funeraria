@@ -1,26 +1,36 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Test.Models;
+using Sistema_gestion_funeraria.Middleware;
+using Sistema_gestion_funeraria.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<FunerariaContext>(db => db.UseSqlServer(connectionString));
 builder.Services.AddLogging(builder => builder.AddConsole());
 
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+{
+    options.Password.RequiredLength = 12;
+})
+.AddEntityFrameworkStores<FunerariaContext>();
+
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ManejadorExcepcionMiddleware>();
 
 app.UseHttpsRedirection();
 
