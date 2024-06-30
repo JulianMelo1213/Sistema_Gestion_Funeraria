@@ -68,7 +68,9 @@ dotnet watch run
 - **C#**: Un lenguaje de programación moderno y de propósito general.
 - **.NET**: Una plataforma de desarrollo gratuita y de código abierto para la creación de diferentes tipos de aplicaciones.
 - **SQL Server**: Un sistema de gestión de bases de datos relacional desarrollado por Microsoft.
+- **JWT**: (JSON Web Token) Un estándar abierto para la creación de tokens de acceso que permiten la transmisión segura de información entre partes como un objeto JSON.
 
 [![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=csharp&logoColor=white)](https://dotnet.microsoft.com/en-us/languages/csharp)
 [![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 [![MicrosoftSQLServer](https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=for-the-badge&logo=microsoft%20sql%20server&logoColor=white)](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+[![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)](https://jwt.io/)
