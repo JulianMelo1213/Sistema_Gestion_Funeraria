@@ -1,0 +1,6 @@
+
+Temas por hablar:
+- Auto Mapper
+- DDD
+- DTO
+- ViewModel
