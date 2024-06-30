@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sistema_gestion_funeraria.Middleware;
 using Sistema_gestion_funeraria.Models;
+using Test.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
