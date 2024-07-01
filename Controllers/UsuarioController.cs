@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Sistema_gestion_funeraria.Helper;
 using Sistema_gestion_funeraria.Models;
 using Sistema_gestion_funeraria.Models.DTOs.Usuario;
-using System.Runtime.CompilerServices;
 
 namespace Sistema_gestion_funeraria.Controllers
 {
