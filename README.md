@@ -57,7 +57,7 @@ dotnet watch run
 - [ ] Implementación de los DTO de cada modelo y su respectivo mapeo con AutoMapper.
 - [x] Creación de los Controladores de los Modelos.
 - [x] Implementación de capa de autenticación con JWT (JSON Web Token).
-- [ ] Implementación de Politicas de Autorización y Roles.
+- [x] Implementación de Politicas de Autorización y Roles.
 
 ### FrontEnd
 
