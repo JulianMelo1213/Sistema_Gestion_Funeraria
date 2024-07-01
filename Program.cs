@@ -90,6 +90,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ManejadorExcepcionMiddleware>();
+app.UseMiddleware<AccesoNoAutorizadoMiddleware>();
 
 app.UseHttpsRedirection();
 
