@@ -50,14 +50,16 @@ namespace Sistema_gestion_funeraria.Controllers
                     var roleResult = await userManager.AddToRoleAsync(appUser, "Usuario");
                     if (roleResult.Succeeded)
                     {
-                        return Ok(
-                            new NuevoUsuarioDTO
-                            {
-                                NombreUsuario = appUser.UserName,
-                                Correo = appUser.Email,
-                                Token = tokenHelper.GenerateJWTToken(appUser)
-                            }
-                        );
+                        var roles = await userManager.GetRolesAsync(appUser);
+
+                        var token = tokenHelper.GenerateJWTToken(appUser, roles);
+
+                        return Ok(new NuevoUsuarioDTO
+                        {
+                            NombreUsuario = appUser.UserName,
+                            Correo = appUser.Email,
+                            Token = token
+                        });
                     }
                     else
                     {
@@ -86,33 +88,29 @@ namespace Sistema_gestion_funeraria.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDTO.NombreUsuario.ToLower());
+            var appUser = await userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDTO.NombreUsuario.ToLower());
 
-            if (user == null)
+            if (appUser == null)
             {
                 return Unauthorized("Usuario o contraseña inválida");
             }
 
-            var result = await signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
+            var result = await signInManager.CheckPasswordSignInAsync(appUser, loginDTO.Password, false);
 
             if (result.Succeeded)
             {
-                // Obtener roles del usuario
-                var roles = await userManager.GetRolesAsync(user);
+                var roles = await userManager.GetRolesAsync(appUser);
 
-                // Generar token JWT con roles incluidos
-                var token = tokenHelper.GenerateJWTToken(user, roles);
+                var token = tokenHelper.GenerateJWTToken(appUser, roles);
 
-                // Retornar respuesta con token y otros datos del usuario
                 return Ok(new NuevoUsuarioDTO
                 {
-                    NombreUsuario = user.UserName,
-                    Correo = user.Email,
+                    NombreUsuario = appUser.UserName,
+                    Correo = appUser.Email,
                     Token = token
                 });
             }
 
-            // Autenticación fallida
             return Unauthorized("Usuario no encontrado y/o contraseña incorrecta");
         }
 
@@ -174,11 +172,12 @@ namespace Sistema_gestion_funeraria.Controllers
             }
         }
 
-        [HttpPost("verroles")]
+        [HttpGet("roles")]
         [Authorize(Roles = "Administrador")]
-        private async Task<ActionResult<IEnumerable<IdentityRole>>> GetRoles()
+        public async Task<ActionResult<IEnumerable<string>>> GetRoles()
         {
-            return await roleManager.Roles.ToListAsync();
+            var roles = await roleManager.Roles.Select(r => r.Name).ToListAsync();
+            return Ok(roles);
         }
     }
 }
