@@ -63,7 +63,7 @@ namespace Sistema_gestion_funeraria.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TipoIdentificacioneExists(id))
+                if (!await TipoIdentificacioneExists(id))
                 {
                     return NotFound();
                 }
