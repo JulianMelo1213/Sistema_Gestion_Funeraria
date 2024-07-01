@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Sistema_gestion_funeraria.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<FunerariaContext>(db => db.UseSqlServer(connectionString));
 builder.Services.AddLogging(builder => builder.AddConsole());
+
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
@@ -24,7 +26,8 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme =
     options.DefaultChallengeScheme =
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(x =>
+})
+.AddJwtBearer(x =>
 {
     x.RequireHttpsMetadata = false;
     x.SaveToken = false;
@@ -38,6 +41,11 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = false,
         ValidateAudience = false,
     };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    AuthorizationPoliciesHelper.AddPolicies(options);
 });
 
 builder.Services.AddControllers();
@@ -68,6 +76,7 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddProblemDetails();

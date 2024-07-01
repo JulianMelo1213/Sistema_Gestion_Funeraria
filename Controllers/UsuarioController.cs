@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_gestion_funeraria.Helper;
@@ -16,15 +17,17 @@ namespace Sistema_gestion_funeraria.Controllers
         private readonly AuthenticationHelper tokenHelper;
 
         private readonly SignInManager<AppUser> signInManager;
+        private readonly RoleManager<IdentityRole> roleManager;
 
-        public UsuarioController(UserManager<AppUser> userManager, AuthenticationHelper tokenHelper, SignInManager<AppUser> signInManager)
+        public UsuarioController(UserManager<AppUser> userManager, AuthenticationHelper tokenHelper, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.tokenHelper = tokenHelper;
             this.signInManager = signInManager;
+            this.roleManager = roleManager;
         }
 
-        [HttpPost("Registro")]
+        [HttpPost("register")]
         public async Task<IActionResult> Registro([FromBody] RegistroDTO registroDTO)
         {
             try
@@ -74,9 +77,9 @@ namespace Sistema_gestion_funeraria.Controllers
 
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
 
-        public async Task<IActionResult> login(LoginDTO loginDTO)
+        public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
             if (!ModelState.IsValid)
             {
@@ -92,19 +95,90 @@ namespace Sistema_gestion_funeraria.Controllers
 
             var result = await signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
 
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                return Unauthorized("Usuario no encontrado y/o contraseña incorrecta");
-            }
+                // Obtener roles del usuario
+                var roles = await userManager.GetRolesAsync(user);
 
-            return Ok(
-                new NuevoUsuarioDTO
+                // Generar token JWT con roles incluidos
+                var token = tokenHelper.GenerateJWTToken(user, roles);
+
+                // Retornar respuesta con token y otros datos del usuario
+                return Ok(new NuevoUsuarioDTO
                 {
                     NombreUsuario = user.UserName,
                     Correo = user.Email,
-                    Token = tokenHelper.GenerateJWTToken(user)
+                    Token = token
+                });
+            }
+
+            // Autenticación fallida
+            return Unauthorized("Usuario no encontrado y/o contraseña incorrecta");
+        }
+
+        [HttpPost("añadirrol")]
+        [Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> AñadirRol([FromBody] CambiarRolDTO cambiarRolDTO)
+        {
+            try
+            {
+                var user = await userManager.FindByIdAsync(cambiarRolDTO.IdUsuario);
+
+                if (user == null)
+                {
+                    return NotFound("Usuario no encontrado");
                 }
-            );
+
+                var currentRoles = await userManager.GetRolesAsync(user);
+                var roleResult = await userManager.AddToRolesAsync(user, cambiarRolDTO.Roles);
+
+                if (!roleResult.Succeeded)
+                {
+                    return StatusCode(500, roleResult.Errors);
+                }
+
+                return Ok("Roles añadidos exitosamente");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpPost("quitarrol")]
+        [Authorize(Roles = "Administrador")]
+        public async Task<IActionResult> QuitarRol([FromBody] CambiarRolDTO cambiarRolDTO)
+        {
+            try
+            {
+                var user = await userManager.FindByIdAsync(cambiarRolDTO.IdUsuario);
+
+                if (user == null)
+                {
+                    return NotFound("Usuario no encontrado");
+                }
+
+                var currentRoles = await userManager.GetRolesAsync(user);
+                var roleResult = await userManager.RemoveFromRolesAsync(user, cambiarRolDTO.Roles);
+
+                if (!roleResult.Succeeded)
+                {
+                    return StatusCode(500, roleResult.Errors);
+                }
+
+                return Ok("Roles eliminados exitosamente");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpPost("verroles")]
+        [Authorize(Roles = "Administrador")]
+        private async Task<ActionResult<IEnumerable<IdentityRole>>> GetRoles()
+        {
+            return await roleManager.Roles.ToListAsync();
         }
     }
 }

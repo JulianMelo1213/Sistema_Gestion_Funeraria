@@ -17,7 +17,7 @@ namespace Sistema_gestion_funeraria.Helper
             this.key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.config["JWT:SigningKey"]));
         }
 
-        public string GenerateJWTToken(AppUser user)
+        public string GenerateJWTToken(AppUser user, IList<string> roles)
         {
             var claims = new List<Claim>()
             {
@@ -26,12 +26,17 @@ namespace Sistema_gestion_funeraria.Helper
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
             };
 
+            foreach (var rol in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, rol));
+            }
+
             var jwtToken = new JwtSecurityToken(
                 claims: claims,
                 notBefore: DateTime.UtcNow,
                 expires: DateTime.UtcNow.AddMinutes(20),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
-                );
+            );
 
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
