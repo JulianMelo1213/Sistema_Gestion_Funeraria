@@ -43,7 +43,13 @@ cd 'Sistema Gestion Funeraria (LP2)'
 dotnet restore
 ```
 
-5. Ejecutar el proyecto:
+5. Implementar las migraciones:
+
+```sh
+dotnet ef database update
+```
+
+6. Ejecutar el proyecto:
 
 ```sh
 dotnet watch run
