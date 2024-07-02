@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Sistema_gestion_funeraria.Helper;
+using Sistema_gestion_funeraria.Interface;
+using Sistema_gestion_funeraria.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,7 +47,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    AuthorizationPoliciesHelper.AddPolicies(options);
+    PoliciesHelper.AddPolicies(options);
 });
 
 builder.Services.AddControllers();
@@ -77,6 +79,8 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+builder.Services.AddScoped<ClaimsHelper>();
+builder.Services.AddTransient<ITokenService, TokenService>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddProblemDetails();
@@ -89,12 +93,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ManejadorExcepcionMiddleware>();
-app.UseMiddleware<AccesoNoAutorizadoMiddleware>();
-
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ManejadorExcepcionMiddleware>();
 
 app.MapControllers();
 
