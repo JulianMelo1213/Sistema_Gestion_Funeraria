@@ -28,13 +28,13 @@ cd Proyecto
 2. Clonar el repositorio:
 
 ```sh
-git clone https://github.com/josearmandosm/Sistema-Gestion-Funeraria-LP2-.git
+git clone https://github.com/JulianMelo1213/Sistema_Gestion_Funeraria.git
 ```
 
 3. Navegar al directorio del proyecto:
 
 ```sh
-cd 'Sistema Gestion Funeraria (LP2)'
+cd 'Sistema_Gestion_Funeraria'
 ```
 
 4. Restaurar los paquetes NuGet si es necesario:
