@@ -26,7 +26,6 @@ namespace Sistema_gestion_funeraria.Middleware
         {
             var accessToken = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
-            // Si no hay token de acceso, continuar con la solicitud sin refrescar
             if (string.IsNullOrEmpty(accessToken))
             {
                 await _next(context);
@@ -54,8 +53,7 @@ namespace Sistema_gestion_funeraria.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unhandled exception occurred during token refresh.");
-                // Puedes manejar el error aquí según tus necesidades
+                _logger.LogError(ex, "Un excepción no ha sido manejada durante el refresco del token.");
             }
 
             await _next(context);
