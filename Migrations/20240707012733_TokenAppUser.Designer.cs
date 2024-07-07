@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sistema_gestion_funeraria.Models;
 
@@ -11,9 +12,11 @@ using Sistema_gestion_funeraria.Models;
 namespace Sistema_gestion_funeraria.Migrations
 {
     [DbContext(typeof(FunerariaContext))]
-    partial class FunerariaContextModelSnapshot : ModelSnapshot
+    [Migration("20240707012733_TokenAppUser")]
+    partial class TokenAppUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
