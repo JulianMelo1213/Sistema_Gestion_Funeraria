@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-
 namespace Sistema_gestion_funeraria.Models.Model_Configuration
 {
     public class ServiciosCategoriaConfiguration : IEntityTypeConfiguration<ServiciosCategoria>

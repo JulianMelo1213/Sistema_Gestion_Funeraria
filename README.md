@@ -28,13 +28,13 @@ cd Proyecto
 2. Clonar el repositorio:
 
 ```sh
-git clone https://github.com/josearmandosm/Sistema-Gestion-Funeraria-LP2-.git
+git clone https://github.com/JulianMelo1213/Sistema_Gestion_Funeraria.git
 ```
 
 3. Navegar al directorio del proyecto:
 
 ```sh
-cd 'Sistema Gestion Funeraria (LP2)'
+cd 'Sistema_Gestion_Funeraria'
 ```
 
 4. Restaurar los paquetes NuGet si es necesario:
@@ -43,7 +43,13 @@ cd 'Sistema Gestion Funeraria (LP2)'
 dotnet restore
 ```
 
-5. Ejecutar el proyecto:
+5. Implementar las migraciones:
+
+```sh
+dotnet ef database update
+```
+
+6. Ejecutar el proyecto:
 
 ```sh
 dotnet watch run
@@ -57,7 +63,7 @@ dotnet watch run
 - [ ] Implementación de los DTO de cada modelo y su respectivo mapeo con AutoMapper.
 - [x] Creación de los Controladores de los Modelos.
 - [x] Implementación de capa de autenticación con JWT (JSON Web Token).
-- [ ] Implementación de Politicas de Autorización y Roles.
+- [x] Implementación de Politicas de Autorización y Roles.
 
 ### FrontEnd
 

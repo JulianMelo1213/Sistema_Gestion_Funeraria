@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Rewrite;
-using Microsoft.EntityFrameworkCore;
 using Sistema_gestion_funeraria.Helper;
+using Sistema_gestion_funeraria.Interface;
 using Sistema_gestion_funeraria.Models;
 using Sistema_gestion_funeraria.Models.DTOs.Usuario;
-using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace Sistema_gestion_funeraria.Controllers
 {
@@ -15,59 +14,63 @@ namespace Sistema_gestion_funeraria.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly UserManager<AppUser> userManager;
-
-        private readonly AuthenticationHelper tokenHelper;
-
+        private readonly ITokenService tokenService;
         private readonly SignInManager<AppUser> signInManager;
 
-        public UsuarioController(UserManager<AppUser> userManager, AuthenticationHelper tokenHelper, SignInManager<AppUser> signInManager)
+        public UsuarioController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
         {
             this.userManager = userManager;
-            this.tokenHelper = tokenHelper;
+            this.tokenService = tokenService;
             this.signInManager = signInManager;
         }
 
-        [HttpPost("Registro")]
+        [HttpPost("registro")]
         public async Task<IActionResult> Registro([FromBody] RegistroDTO registroDTO)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
-                var appUser = new AppUser
+                var usuario = new AppUser
                 {
                     UserName = registroDTO.NombreUsuario,
-                    Email = registroDTO.Correo,
+                    Nombre = registroDTO.Nombre,
+                    Apellido = registroDTO.Apellido,
+                    Email = registroDTO.CorreoElectronico,
                 };
 
-                var createdUser = await userManager.CreateAsync(appUser, registroDTO.Password);
-
-                if (createdUser.Succeeded)
+                var usuarioCreado = await userManager.CreateAsync(usuario, registroDTO.Password);
+                if (usuarioCreado.Succeeded)
                 {
-                    var roleResult = await userManager.AddToRoleAsync(appUser, "Usuario");
+                    var roleResult = await userManager.AddToRoleAsync(usuario, "Usuario");
                     if (roleResult.Succeeded)
                     {
-                        return Ok(
-                            new NuevoUsuarioDTO
-                            {
-                                NombreUsuario = appUser.UserName,
-                                Correo = appUser.Email,
-                                Token = tokenHelper.GenerateJWTToken(appUser)
-                            }
-                        );
+                        var roles = await userManager.GetRolesAsync(usuario);
+                        var claims = ClaimsHelper.GenerateClaims(usuario, roles);
+                        var token = tokenService.GenerateJWTToken(claims);
+                        var refreshToken = await tokenService.StoreRefreshTokenAsync(usuario);
+
+                        return Ok(new NuevoUsuarioDTO
+                        {
+                            NombreUsuario = usuario.UserName,
+                            Nombre = usuario.Nombre,
+                            Apellido = usuario.Apellido,
+                            Correo = usuario.Email,
+                            Token = token,
+                            RefreshToken = refreshToken
+                        });
                     }
                     else
                     {
                         return StatusCode(500, roleResult.Errors);
                     }
-
                 }
                 else
                 {
-                    return StatusCode(500, createdUser.Errors);
+                    return StatusCode(500, usuarioCreado.Errors);
                 }
             }
             catch (Exception ex)
@@ -77,37 +80,55 @@ namespace Sistema_gestion_funeraria.Controllers
 
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
 
-        public async Task<IActionResult> login(LoginDTO loginDTO)
+        public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = await userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDTO.NombreUsuario.ToLower());
-
-            if (user == null)
+            var usuario = await userManager.FindByNameAsync(loginDTO.NombreUsuario);
+            if (usuario != null || await userManager.CheckPasswordAsync(usuario, loginDTO.Password))
             {
-                return Unauthorized("Usuario o contraseña inválida");
-            }
+                await signInManager.SignInAsync(usuario, isPersistent: false);
+                var roles = await userManager.GetRolesAsync(usuario);
+                var claims = ClaimsHelper.GenerateClaims(usuario, roles);
+                var token = tokenService.GenerateJWTToken(claims);
+                var refreshToken = await tokenService.StoreRefreshTokenAsync(usuario);
 
-            var result = await signInManager.CheckPasswordSignInAsync(user, loginDTO.Password, false);
-
-            if (!result.Succeeded)
-            {
-                return Unauthorized("Usuario no encontrado y/o contraseña incorrecta");
-            }
-
-            return Ok(
-                new NuevoUsuarioDTO
+                return Ok(new TokenDTO
                 {
-                    NombreUsuario = user.UserName,
-                    Correo = user.Email,
-                    Token = tokenHelper.GenerateJWTToken(user)
-                }
-            );
+                    Token = token,
+                    RefreshToken = refreshToken
+                });
+            }
+            return Unauthorized("Usuario no encontrado y/o contraseña incorrecta");
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var usuarioId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (usuarioId == null)
+            {
+                return BadRequest("No se pudo encontrar el ID de usuario en el token JWT.");
+            }
+
+            var usuario = await userManager.FindByIdAsync(usuarioId);
+
+            if (usuario == null)
+            {
+                return BadRequest("Usuario no encontrado.");
+            }
+
+            tokenService.RemoveRefreshTokenAsync(usuario);
+            await signInManager.SignOutAsync();
+
+            return Ok("Sesión cerrada correctamente.");
         }
     }
 }
