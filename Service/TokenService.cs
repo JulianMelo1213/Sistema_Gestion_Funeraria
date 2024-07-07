@@ -1,5 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Sistema_gestion_funeraria.Helper;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Sistema_gestion_funeraria.Interface;
 using Sistema_gestion_funeraria.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,13 +11,20 @@ namespace Sistema_gestion_funeraria.Services
 {
     public class TokenService : ITokenService
     {
-        private readonly IConfiguration config;
-        private readonly SymmetricSecurityKey key;
+        private readonly IConfiguration _config;
+        private readonly SymmetricSecurityKey _key;
+        private readonly UserManager<AppUser> _userManager;
 
-        public TokenService(IConfiguration config)
+        public TokenService(IConfiguration config, UserManager<AppUser> userManager)
         {
-            this.config = config;
-            this.key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.config["JWT:SigningKey"]));
+            _config = config;
+            var signingKey = _config["JWT:SigningKey"];
+            if (string.IsNullOrEmpty(signingKey))
+            {
+                throw new ArgumentException("No se puede encontrar la Signing key definida en la configuración");
+            }
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signingKey));
+            _userManager = userManager;
         }
 
         public string GenerateJWTToken(IList<Claim> claims)
@@ -26,7 +33,7 @@ namespace Sistema_gestion_funeraria.Services
                 claims: claims,
                 notBefore: DateTime.UtcNow,
                 expires: DateTime.UtcNow.AddMinutes(30),
-                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
+                signingCredentials: new SigningCredentials(_key, SecurityAlgorithms.HmacSha256)
             );
 
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
@@ -34,10 +41,10 @@ namespace Sistema_gestion_funeraria.Services
 
         public string GenerateRefreshToken()
         {
-            var numeroAleatorio = new byte[32];
+            var randomNumber = new byte[32];
             using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(numeroAleatorio);
-            return Convert.ToBase64String(numeroAleatorio);
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
 
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
@@ -47,16 +54,45 @@ namespace Sistema_gestion_funeraria.Services
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = key,
+                IssuerSigningKey = _key,
                 ValidateLifetime = false
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Token inválido");
-            return principal;
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+                if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                    !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    throw new SecurityTokenException("Invalid token");
+                }
+                return principal;
+            }
+            catch (Exception ex)
+            {
+                throw new SecurityTokenException("Invalid token", ex);
+            }
+        }
+        
+        public async Task<string> StoreRefreshTokenAsync(AppUser user)
+        {
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpirationTime = DateTime.UtcNow.AddMinutes(30);
+
+            await _userManager.UpdateAsync(user);
+
+            return refreshToken;
+        }
+
+        public async Task<bool> RemoveRefreshTokenAsync(AppUser user)
+        {
+            user.RefreshToken = null;
+            user.RefreshTokenExpirationTime = DateTime.MinValue;
+
+            await _userManager.UpdateAsync(user);
+            return true;
         }
     }
 }

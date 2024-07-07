@@ -17,7 +17,7 @@ namespace Sistema_gestion_funeraria.Models.DTOs.Usuario
 
         [Required]
         [EmailAddress]
-        public string? Correo { get; set; }
+        public string? CorreoElectronico { get; set; }
 
         [Required]
         public string? Password { get; set; }

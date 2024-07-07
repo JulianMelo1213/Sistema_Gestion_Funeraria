@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Sistema_gestion_funeraria.Helper;
 using Sistema_gestion_funeraria.Interface;
 using Sistema_gestion_funeraria.Models;
@@ -17,14 +16,12 @@ namespace Sistema_gestion_funeraria.Controllers
         private readonly UserManager<AppUser> userManager;
         private readonly ITokenService tokenService;
         private readonly SignInManager<AppUser> signInManager;
-        private readonly RoleManager<IdentityRole> roleManager;
 
-        public UsuarioController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public UsuarioController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
         {
             this.userManager = userManager;
             this.tokenService = tokenService;
             this.signInManager = signInManager;
-            this.roleManager = roleManager;
         }
 
         [HttpPost("registro")]
@@ -37,38 +34,31 @@ namespace Sistema_gestion_funeraria.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var appUser = new AppUser
+                var usuario = new AppUser
                 {
                     UserName = registroDTO.NombreUsuario,
                     Nombre = registroDTO.Nombre,
                     Apellido = registroDTO.Apellido,
-                    Email = registroDTO.Correo,
+                    Email = registroDTO.CorreoElectronico,
                 };
 
-                var createdUser = await userManager.CreateAsync(appUser, registroDTO.Password);
-
-                if (createdUser.Succeeded)
+                var usuarioCreado = await userManager.CreateAsync(usuario, registroDTO.Password);
+                if (usuarioCreado.Succeeded)
                 {
-                    var roleResult = await userManager.AddToRoleAsync(appUser, "Usuario");
+                    var roleResult = await userManager.AddToRoleAsync(usuario, "Usuario");
                     if (roleResult.Succeeded)
                     {
-                        var roles = await userManager.GetRolesAsync(appUser);
-                        var claims = ClaimsHelper.GenerateClaims(appUser, roles);
+                        var roles = await userManager.GetRolesAsync(usuario);
+                        var claims = ClaimsHelper.GenerateClaims(usuario, roles);
                         var token = tokenService.GenerateJWTToken(claims);
-
-                        var refreshToken = tokenService.GenerateRefreshToken();
-
-                        appUser.RefreshToken = refreshToken;
-                        appUser.RefreshTokenExpirationTime = DateTime.Now.AddMinutes(30);
-
-                        await userManager.UpdateAsync(appUser);
+                        var refreshToken = await tokenService.StoreRefreshTokenAsync(usuario);
 
                         return Ok(new NuevoUsuarioDTO
                         {
-                            NombreUsuario = appUser.UserName,
-                            Nombre = appUser.Nombre,
-                            Apellido = appUser.Apellido,
-                            Correo = appUser.Email,
+                            NombreUsuario = usuario.UserName,
+                            Nombre = usuario.Nombre,
+                            Apellido = usuario.Apellido,
+                            Correo = usuario.Email,
                             Token = token,
                             RefreshToken = refreshToken
                         });
@@ -77,10 +67,10 @@ namespace Sistema_gestion_funeraria.Controllers
                     {
                         return StatusCode(500, roleResult.Errors);
                     }
-                                    }
+                }
                 else
                 {
-                    return StatusCode(500, createdUser.Errors);
+                    return StatusCode(500, usuarioCreado.Errors);
                 }
             }
             catch (Exception ex)
@@ -99,26 +89,14 @@ namespace Sistema_gestion_funeraria.Controllers
                 return BadRequest(ModelState);
             }
 
-            var appUser = await userManager.Users.FirstOrDefaultAsync(x => x.UserName == loginDTO.NombreUsuario);
-
-            if (appUser == null)
+            var usuario = await userManager.FindByNameAsync(loginDTO.NombreUsuario);
+            if (usuario != null || await userManager.CheckPasswordAsync(usuario, loginDTO.Password))
             {
-                return Unauthorized("Usuario o contraseña inválida");
-            }
-
-            var result = await signInManager.CheckPasswordSignInAsync(appUser, loginDTO.Password, false);
-
-            if (result.Succeeded)
-            {
-                var roles = await userManager.GetRolesAsync(appUser);
-                var claims = ClaimsHelper.GenerateClaims(appUser, roles);
+                await signInManager.SignInAsync(usuario, isPersistent: false);
+                var roles = await userManager.GetRolesAsync(usuario);
+                var claims = ClaimsHelper.GenerateClaims(usuario, roles);
                 var token = tokenService.GenerateJWTToken(claims);
-                var refreshToken = tokenService.GenerateRefreshToken();
-
-                appUser.RefreshToken = refreshToken;
-                appUser.RefreshTokenExpirationTime = DateTime.Now.AddMinutes(30);
-
-                await userManager.UpdateAsync(appUser);
+                var refreshToken = await tokenService.StoreRefreshTokenAsync(usuario);
 
                 return Ok(new TokenDTO
                 {
@@ -133,56 +111,24 @@ namespace Sistema_gestion_funeraria.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var usuarioId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null)
+            if (usuarioId == null)
             {
                 return BadRequest("No se pudo encontrar el ID de usuario en el token JWT.");
             }
 
-            var appUser = await userManager.FindByIdAsync(userId);
+            var usuario = await userManager.FindByIdAsync(usuarioId);
 
-            if (appUser == null)
+            if (usuario == null)
             {
                 return BadRequest("Usuario no encontrado.");
             }
 
-            // Eliminar el refresh token y su fecha de expiración
-            appUser.RefreshToken = null;
-
-            await userManager.UpdateAsync(appUser);
+            tokenService.RemoveRefreshTokenAsync(usuario);
+            await signInManager.SignOutAsync();
 
             return Ok("Sesión cerrada correctamente.");
-        }
-
-
-        [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken([FromBody] TokenDTO tokenDTO)
-        {
-            var principal = tokenService.GetPrincipalFromExpiredToken(tokenDTO.Token);
-            var username = principal.Identity.Name; // Obtener el nombre de usuario del token
-            var user = await userManager.FindByNameAsync(username); // Buscar el usuario en la base de datos
-
-            // Verificar si el token de refresco está válido para el usuario
-            if (user == null || user.RefreshToken != tokenDTO.RefreshToken || user.RefreshTokenExpirationTime <= DateTime.UtcNow)
-            {
-                return BadRequest("Token inválido o expirado");
-            }
-
-            var roles = await userManager.GetRolesAsync(user);
-            var claims = ClaimsHelper.GenerateClaims(user, roles);
-
-            var newJwtToken = tokenService.GenerateJWTToken(claims); // Generar un nuevo token JWT
-            var newRefreshToken = tokenService.GenerateRefreshToken(); // Generar un nuevo token de refresco
-
-            user.RefreshToken = newRefreshToken; // Actualizar el token de refresco en la base de datos
-            await userManager.UpdateAsync(user);
-
-            return Ok(new TokenDTO
-            {
-                Token = newJwtToken,
-                RefreshToken = newRefreshToken
-            });
         }
     }
 }

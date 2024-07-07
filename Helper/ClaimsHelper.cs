@@ -8,8 +8,6 @@ namespace Sistema_gestion_funeraria.Helper
     {
         public static List<Claim> GenerateClaims(AppUser user, IList<string> roles)
         {
-            var claimsIdentity = new ClaimsIdentity();
-
             var claims = new List<Claim>
             {
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),

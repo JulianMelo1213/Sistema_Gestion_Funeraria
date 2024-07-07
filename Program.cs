@@ -74,13 +74,16 @@ builder.Services.AddSwaggerGen(option =>
                     Id="Bearer"
                 }
             },
-            new string[]{}
+            Array.Empty<string>()
         }
     });
 });
 
+builder.Services.AddScoped<UserManager<AppUser>>();
+builder.Services.AddScoped<SignInManager<AppUser>>();
+
 builder.Services.AddScoped<ClaimsHelper>();
-builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddProblemDetails();
@@ -99,6 +102,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ManejadorExcepcionMiddleware>();
+app.UseMiddleware<RefreshTokenMiddleware>();
 
 app.MapControllers();
 
